@@ -1,0 +1,1 @@
+[Prototype Wireframe "Quản lý hộ khẩu", "Tạm trú", "Tạm vắng"](https://www.figma.com/proto/Ycwofz6JUfO9OUkHBKZjpJ/wireframe?node-id=0-1&t=sNHc3jJMK3uDyLni-1)
