@@ -1,0 +1,90 @@
+-- Active: 1762183366540@@127.0.0.1@1433@QuanLyNhanKhauDB
+
+
+create DATABASE QuanLyNhanKhauDB;
+
+CREATE TABLE HoGiaDinh (
+    ID_HoGiaDinh INT IDENTITY(1,1) NOT NULL,
+    MaHoGiaDinh NVARCHAR(50) NOT NULL,
+    TenChuHo NVARCHAR(100),
+    SoDienThoaiLienHe VARCHAR(15),
+    EmailLienHe VARCHAR(100),
+    SoTang INT,
+    SoCanHo NVARCHAR(50),
+    DienTich FLOAT, 
+    TrangThai NVARCHAR(50),
+    NgayTao DATETIME DEFAULT GETDATE(),
+    NgayCapNhat DATETIME
+);
+
+CREATE TABLE NhanKhau (
+    ID_NhanKhau INT IDENTITY(1,1) NOT NULL,
+    ID_HoGiaDinh INT NOT NULL,
+    HoTen NVARCHAR(100) NOT NULL,
+    NgaySinh DATE,
+    GioiTinh NVARCHAR(10),
+    SoCCCD VARCHAR(12),
+    SoDienThoai VARCHAR(15),
+    Email VARCHAR(100),
+    QuanHeVoiChuHo NVARCHAR(50),
+    LaChuHo BIT DEFAULT 0,
+    NgayChuyenDen DATE,
+    TrangThai NVARCHAR(50)
+);
+
+CREATE TABLE TamTru (
+    ID_TamTru INT IDENTITY(1,1) NOT NULL,
+    ID_HoGiaDinh INT NOT NULL,
+    HoTen NVARCHAR(100) NOT NULL,
+    SoCCCD VARCHAR(12),
+    NgaySinh DATE,
+    SoDienThoai VARCHAR(15),
+    NgayBatDau DATE NOT NULL,
+    NgayKetThuc DATE NOT NULL,
+    LyDo NVARCHAR(255),
+    NgayDangKy DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE TamVang (
+    ID_TamVang INT IDENTITY(1,1) NOT NULL,
+    ID_NhanKhau INT NOT NULL, 
+    NgayBatDau DATE NOT NULL,
+    NgayKetThuc DATE NOT NULL,
+    NoiDen NVARCHAR(255),
+    LyDo NVARCHAR(255),
+    NgayDangKy DATETIME DEFAULT GETDATE()
+);
+
+GO 
+
+ALTER TABLE HoGiaDinh
+ADD CONSTRAINT PK_HoGiaDinh PRIMARY KEY (ID_HoGiaDinh);
+
+ALTER TABLE NhanKhau
+ADD CONSTRAINT PK_NhanKhau PRIMARY KEY (ID_NhanKhau);
+
+ALTER TABLE TamTru
+ADD CONSTRAINT PK_TamTru PRIMARY KEY (ID_TamTru);
+
+ALTER TABLE TamVang
+ADD CONSTRAINT PK_TamVang PRIMARY KEY (ID_TamVang);
+
+ALTER TABLE HoGiaDinh
+ADD CONSTRAINT UC_HoGiaDinh_MaHoGiaDinh UNIQUE (MaHoGiaDinh);
+
+ALTER TABLE NhanKhau
+ADD CONSTRAINT UC_NhanKhau_SoCCCD UNIQUE (SoCCCD);
+
+ALTER TABLE NhanKhau
+ADD CONSTRAINT FK_NhanKhau_HoGiaDinh
+FOREIGN KEY (ID_HoGiaDinh) REFERENCES HoGiaDinh(ID_HoGiaDinh);
+
+ALTER TABLE TamTru
+ADD CONSTRAINT FK_TamTru_HoGiaDinh
+FOREIGN KEY (ID_HoGiaDinh) REFERENCES HoGiaDinh(ID_HoGiaDinh);
+
+ALTER TABLE TamVang
+ADD CONSTRAINT FK_TamVang_NhanKhau
+FOREIGN KEY (ID_NhanKhau) REFERENCES NhanKhau(ID_NhanKhau);
+
+GO
