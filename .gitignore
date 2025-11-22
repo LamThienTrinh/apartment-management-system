@@ -16,6 +16,7 @@ logs/
 .env
 .env.*
 *.env
+!.env.example
 
 # === Java / Spring Boot (Backend) ===
 /backend/target/
