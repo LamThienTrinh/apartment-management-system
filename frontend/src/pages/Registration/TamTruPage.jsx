@@ -11,7 +11,7 @@ export default function TamTruPage() {
   const { message } = App.useApp();
   const { data: records, loading, refetch } = useFetch(tamTruService.getAll);
   const { data: householdOptions, refetch: fetchHouseholds } = useFetch(householdService.getOptions);
-
+  
   // Initial values khớp với DangKyTamTruDTO
   const modal = useModal({
     hoTen: "",
@@ -118,36 +118,36 @@ export default function TamTruPage() {
   }, [refetch]);
 
   const columns = [
-    {
-      title: "Họ tên",
+    { 
+      title: "Họ tên", 
       key: "hoTen",
       render: (_, record) => record?.nhanKhau?.hoTen || record?.hoTen || "-"
     },
-    {
-      title: "CCCD",
+    { 
+      title: "CCCD", 
       key: "soCCCD",
       render: (_, record) => record?.nhanKhau?.soCCCD || record?.soCCCD || "-"
     },
-    {
-      title: "Quan hệ",
+    { 
+      title: "Quan hệ", 
       key: "quanHe",
       render: (_, record) => record?.nhanKhau?.quanHeVoiChuHo || "-"
     },
     { title: "Từ ngày", dataIndex: "ngayBatDau" },
     { title: "Đến ngày", dataIndex: "ngayKetThuc", render: (v) => v || "Chưa xác định" },
-    {
-      title: "Hộ gia đình",
+    { 
+      title: "Hộ gia đình", 
       key: "hoGiaDinh",
-      render: (_, record) => record?.nhanKhau?.hoGiaDinh?.maHoGiaDinh || "-"
+      render: (_, record) => record?.nhanKhau?.hoGiaDinh?.maHoGiaDinh || "-" 
     },
     {
       title: "Thao tác",
       render: (_, record) => (
         <div style={{ display: 'flex', gap: 4 }}>
           <Tooltip title="Hủy tạm trú (người đã rời đi)">
-            <Button
-              size="small"
-              type="primary"
+            <Button 
+              size="small" 
+              type="primary" 
               ghost
               icon={<CheckCircleOutlined />}
               onClick={() => handleHuyTamTru(record.id)}
