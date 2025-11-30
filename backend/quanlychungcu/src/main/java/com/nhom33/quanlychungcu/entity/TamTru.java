@@ -15,14 +15,18 @@ public class TamTru {
     @Column(name = "ID_TamTru")
     private Integer id;
 
+    @NotNull(message = "Hộ gia đình không được để trống")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_HoGiaDinh", nullable = false)
+    private HoGiaDinh hoGiaDinh;
+
     @NotBlank(message = "Họ tên không được để trống")
     @Size(max = 100, message = "Họ tên không được vượt quá 100 ký tự")
     @Column(name = "HoTen", nullable = false)
     private String hoTen;
 
-    @NotBlank(message = "Số CCCD không được để trống")
     @Pattern(regexp = "^[0-9]{12}$", message = "Số CCCD phải có 12 chữ số")
-    @Column(name = "SoCCCD", nullable = false)
+    @Column(name = "SoCCCD")
     private String soCCCD;
 
     @Column(name = "NgaySinh")
@@ -60,9 +64,9 @@ public class TamTru {
     public TamTru() {
     }
     
-    public TamTru(String hoTen, String soCCCD, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+    public TamTru(HoGiaDinh hoGiaDinh, String hoTen, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        this.hoGiaDinh = hoGiaDinh;
         this.hoTen = hoTen;
-        this.soCCCD = soCCCD;
         this.ngayBatDau = ngayBatDau;
         this.ngayKetThuc = ngayKetThuc;
     }
@@ -75,6 +79,14 @@ public class TamTru {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public HoGiaDinh getHoGiaDinh() {
+        return hoGiaDinh;
+    }
+
+    public void setHoGiaDinh(HoGiaDinh hoGiaDinh) {
+        this.hoGiaDinh = hoGiaDinh;
     }
 
     public String getHoTen() {

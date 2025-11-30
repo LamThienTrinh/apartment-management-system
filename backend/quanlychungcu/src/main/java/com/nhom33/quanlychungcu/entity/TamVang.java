@@ -15,9 +15,10 @@ public class TamVang {
     @Column(name = "ID_TamVang")
     private Integer id;
 
-    @NotNull(message = "ID nhân khẩu không được để trống")
-    @Column(name = "ID_NhanKhau", nullable = false)
-    private Integer idNhanKhau;
+    @NotNull(message = "Nhân khẩu không được để trống")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_NhanKhau", nullable = false)
+    private NhanKhau nhanKhau;
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
     @Column(name = "NgayBatDau", nullable = false)
@@ -51,8 +52,8 @@ public class TamVang {
     public TamVang() {
     }
     
-    public TamVang(Integer idNhanKhau, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
-        this.idNhanKhau = idNhanKhau;
+    public TamVang(NhanKhau nhanKhau, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        this.nhanKhau = nhanKhau;
         this.ngayBatDau = ngayBatDau;
         this.ngayKetThuc = ngayKetThuc;
     }
@@ -67,12 +68,12 @@ public class TamVang {
         this.id = id;
     }
 
-    public Integer getIdNhanKhau() {
-        return idNhanKhau;
+    public NhanKhau getNhanKhau() {
+        return nhanKhau;
     }
 
-    public void setIdNhanKhau(Integer idNhanKhau) {
-        this.idNhanKhau = idNhanKhau;
+    public void setNhanKhau(NhanKhau nhanKhau) {
+        this.nhanKhau = nhanKhau;
     }
 
     public LocalDate getNgayBatDau() {
@@ -122,20 +123,19 @@ public class TamVang {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TamVang tamVang = (TamVang) o;
-        return Objects.equals(id, tamVang.id) && 
-               Objects.equals(idNhanKhau, tamVang.idNhanKhau);
+        return Objects.equals(id, tamVang.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idNhanKhau);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "TamVang{" +
                 "id=" + id +
-                ", idNhanKhau=" + idNhanKhau +
+                ", nhanKhau=" + (nhanKhau != null ? nhanKhau.getId() : null) +
                 ", ngayBatDau=" + ngayBatDau +
                 ", ngayKetThuc=" + ngayKetThuc +
                 ", noiDen='" + noiDen + '\'' +
