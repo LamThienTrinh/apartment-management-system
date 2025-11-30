@@ -23,7 +23,7 @@ CREATE TABLE NhanKhau (
     HoTen NVARCHAR(100) NOT NULL,
     NgaySinh DATE,
     GioiTinh NVARCHAR(10),
-    SoCCCD VARCHAR(12),
+    SoCCCD VARCHAR(12) NOT NULL,
     SoDienThoai VARCHAR(15),
     Email VARCHAR(100),
     QuanHeVoiChuHo NVARCHAR(50),

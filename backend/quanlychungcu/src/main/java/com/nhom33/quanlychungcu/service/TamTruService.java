@@ -5,6 +5,7 @@ import com.nhom33.quanlychungcu.exception.ResourceNotFoundException;
 import com.nhom33.quanlychungcu.repository.TamTruRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,7 @@ public class TamTruService {
     }
 
     @Transactional
-    public TamTru update(Integer id, TamTru updated) {
+    public TamTru update(@NonNull Integer id, TamTru updated) {
         TamTru exist = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("TamTru not found: " + id));
         // set updated fields (ví dụ)
         exist.setHoTen(updated.getHoTen());
@@ -39,21 +40,21 @@ public class TamTruService {
     }
 
     @Transactional
-    public void delete(Integer id) {
+    public void delete(@NonNull Integer id) {
         if (!repo.existsById(id)) throw new ResourceNotFoundException("TamTru not found: " + id);
         repo.deleteById(id);
     }
 
-    public TamTru getById(Integer id) {
+    public TamTru getById(@NonNull Integer id) {
         return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("TamTru not found: " + id));
     }
 
-    public Page<TamTru> searchByName(String hoTen, Pageable pageable) {
+    public Page<TamTru> searchByName(String hoTen, @NonNull Pageable pageable) {
         if (hoTen == null || hoTen.isBlank()) return repo.findAll(pageable);
         return repo.findByHoTenContainingIgnoreCase(hoTen, pageable);
     }
 
-    public Page<TamTru> findAll(Pageable pageable) {
+    public Page<TamTru> findAll(@NonNull Pageable pageable) {
         return repo.findAll(pageable);
     }
 }

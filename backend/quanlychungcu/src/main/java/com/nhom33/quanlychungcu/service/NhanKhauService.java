@@ -8,6 +8,7 @@ import com.nhom33.quanlychungcu.repository.NhanKhauRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,42 +27,49 @@ public class NhanKhauService {
     @Transactional
     public NhanKhau create(NhanKhau nhanKhau) {
         // Kiểm tra số CCCD đã tồn tại chưa
-        if (nhanKhau.getSoCCCD() != null && repo.existsBySoCCCD(nhanKhau.getSoCCCD())) {
+        if (repo.existsBySoCCCD(nhanKhau.getSoCCCD())) {
             throw new IllegalArgumentException(
                 "Số CCCD '" + nhanKhau.getSoCCCD() + "' đã tồn tại"
             );
         }
 
         // Kiểm tra hộ gia đình có tồn tại không
-        if (nhanKhau.getHoGiaDinh() != null && nhanKhau.getHoGiaDinh().getId() != null) {
-            HoGiaDinh hoGiaDinh = hoGiaDinhRepo.findById(nhanKhau.getHoGiaDinh().getId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                    "Không tìm thấy hộ gia đình với ID: " + nhanKhau.getHoGiaDinh().getId()
-                ));
-            nhanKhau.setHoGiaDinh(hoGiaDinh);
+        HoGiaDinh hoGiaDinhInput = nhanKhau.getHoGiaDinh();
+        if (hoGiaDinhInput != null) {
+            Integer hoGiaDinhId = hoGiaDinhInput.getId();
+            if (hoGiaDinhId != null) {
+                HoGiaDinh hoGiaDinh = hoGiaDinhRepo.findById(hoGiaDinhId)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                        "Không tìm thấy hộ gia đình với ID: " + hoGiaDinhId
+                    ));
+                nhanKhau.setHoGiaDinh(hoGiaDinh);
+            }
         }
 
         // Nếu là chủ hộ, kiểm tra đã có chủ hộ chưa
-        if (Boolean.TRUE.equals(nhanKhau.getLaChuHo())) {
-            repo.findChuHoByHoGiaDinhId(nhanKhau.getHoGiaDinh().getId())
-                .ifPresent(existing -> {
-                    throw new IllegalArgumentException(
-                        "Hộ gia đình đã có chủ hộ: " + existing.getHoTen()
-                    );
-                });
+        HoGiaDinh hoGiaDinhCheck = nhanKhau.getHoGiaDinh();
+        if (Boolean.TRUE.equals(nhanKhau.getLaChuHo()) && hoGiaDinhCheck != null) {
+            Integer checkId = hoGiaDinhCheck.getId();
+            if (checkId != null) {
+                repo.findChuHoByHoGiaDinhId(checkId)
+                    .ifPresent(existing -> {
+                        throw new IllegalArgumentException(
+                            "Hộ gia đình đã có chủ hộ: " + existing.getHoTen()
+                        );
+                    });
+            }
         }
 
         return repo.save(nhanKhau);
     }
 
     @Transactional
-    public NhanKhau update(Integer id, NhanKhau updated) {
+    public NhanKhau update(@NonNull Integer id, NhanKhau updated) {
         NhanKhau exist = repo.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhân khẩu với ID: " + id));
 
         // Kiểm tra nếu đổi CCCD và CCCD mới đã tồn tại
-        if (updated.getSoCCCD() != null 
-            && !updated.getSoCCCD().equals(exist.getSoCCCD()) 
+        if (!updated.getSoCCCD().equals(exist.getSoCCCD()) 
             && repo.existsBySoCCCD(updated.getSoCCCD())) {
             throw new IllegalArgumentException(
                 "Số CCCD '" + updated.getSoCCCD() + "' đã tồn tại"
@@ -70,12 +78,18 @@ public class NhanKhauService {
 
         // Nếu đổi thành chủ hộ, kiểm tra đã có chủ hộ chưa
         if (Boolean.TRUE.equals(updated.getLaChuHo()) && !Boolean.TRUE.equals(exist.getLaChuHo())) {
-            repo.findChuHoByHoGiaDinhId(exist.getHoGiaDinh().getId())
-                .ifPresent(chuHo -> {
-                    throw new IllegalArgumentException(
-                        "Hộ gia đình đã có chủ hộ: " + chuHo.getHoTen()
-                    );
-                });
+            HoGiaDinh hoGiaDinh = exist.getHoGiaDinh();
+            if (hoGiaDinh != null) {
+                Integer hoGiaDinhId = hoGiaDinh.getId();
+                if (hoGiaDinhId != null) {
+                    repo.findChuHoByHoGiaDinhId(hoGiaDinhId)
+                        .ifPresent(chuHo -> {
+                            throw new IllegalArgumentException(
+                                "Hộ gia đình đã có chủ hộ: " + chuHo.getHoTen()
+                            );
+                        });
+                }
+            }
         }
 
         // Cập nhật thông tin
@@ -94,7 +108,7 @@ public class NhanKhauService {
     }
 
     @Transactional
-    public void delete(Integer id) {
+    public void delete(@NonNull Integer id) {
         NhanKhau nhanKhau = repo.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhân khẩu với ID: " + id));
 
@@ -108,7 +122,7 @@ public class NhanKhauService {
         repo.deleteById(id);
     }
 
-    public NhanKhau getById(Integer id) {
+    public NhanKhau getById(@NonNull Integer id) {
         return repo.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhân khẩu với ID: " + id));
     }
@@ -118,15 +132,15 @@ public class NhanKhauService {
             .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhân khẩu với CCCD: " + soCCCD));
     }
 
-    public Page<NhanKhau> findAll(Pageable pageable) {
+    public Page<NhanKhau> findAll(@NonNull Pageable pageable) {
         return repo.findAll(pageable);
     }
 
-    public List<NhanKhau> findByHoGiaDinh(Integer idHoGiaDinh) {
+    public List<NhanKhau> findByHoGiaDinh(@NonNull Integer idHoGiaDinh) {
         return repo.findByHoGiaDinhId(idHoGiaDinh);
     }
 
-    public Page<NhanKhau> searchByHoTen(String hoTen, Pageable pageable) {
+    public Page<NhanKhau> searchByHoTen(String hoTen, @NonNull Pageable pageable) {
         if (hoTen == null || hoTen.isBlank()) {
             return repo.findAll(pageable);
         }
@@ -134,11 +148,11 @@ public class NhanKhauService {
     }
 
     public Page<NhanKhau> search(String hoTen, String soCCCD, String gioiTinh, 
-                                  String trangThai, Integer idHoGiaDinh, Pageable pageable) {
+                                  String trangThai, Integer idHoGiaDinh, @NonNull Pageable pageable) {
         return repo.search(hoTen, soCCCD, gioiTinh, trangThai, idHoGiaDinh, pageable);
     }
 
-    public long countByHoGiaDinh(Integer idHoGiaDinh) {
+    public long countByHoGiaDinh(@NonNull Integer idHoGiaDinh) {
         return repo.countByHoGiaDinhId(idHoGiaDinh);
     }
 

@@ -28,8 +28,9 @@ public class NhanKhau {
     @Column(name = "GioiTinh", length = 10)
     private String gioiTinh;
 
+    @NotBlank(message = "Số CCCD không được để trống")
     @Pattern(regexp = "^[0-9]{12}$", message = "Số CCCD phải có 12 chữ số")
-    @Column(name = "SoCCCD", unique = true, length = 12)
+    @Column(name = "SoCCCD", nullable = false, unique = true, length = 12)
     private String soCCCD;
 
     @Pattern(regexp = "^[0-9]{10,11}$", message = "Số điện thoại phải có 10-11 chữ số")

@@ -5,6 +5,7 @@ import com.nhom33.quanlychungcu.exception.ResourceNotFoundException;
 import com.nhom33.quanlychungcu.repository.TamVangRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,7 @@ public class TamVangService {
     }
 
     @Transactional
-    public TamVang update(Integer id, TamVang updated) {
+    public TamVang update(@NonNull Integer id, TamVang updated) {
         TamVang exist = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("TamVang not found: " + id));
         exist.setNgayBatDau(updated.getNgayBatDau());
         exist.setNgayKetThuc(updated.getNgayKetThuc());
@@ -34,16 +35,16 @@ public class TamVangService {
     }
 
     @Transactional
-    public void delete(Integer id) {
+    public void delete(@NonNull Integer id) {
         if (!repo.existsById(id)) throw new ResourceNotFoundException("TamVang not found: " + id);
         repo.deleteById(id);
     }
 
-    public TamVang getById(Integer id) {
+    public TamVang getById(@NonNull Integer id) {
         return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("TamVang not found: " + id));
     }
 
-    public Page<TamVang> searchByNoiDen(String noiDen, Pageable pageable) {
+    public Page<TamVang> searchByNoiDen(String noiDen, @NonNull Pageable pageable) {
         if (noiDen == null || noiDen.isBlank()) return repo.findAll(pageable);
         return repo.findByNoiDenContainingIgnoreCase(noiDen, pageable);
     }
