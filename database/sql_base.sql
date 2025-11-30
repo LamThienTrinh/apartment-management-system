@@ -1,7 +1,7 @@
--- Active: 1762183366540@@127.0.0.1@1433@QuanLyNhanKhauDB
+-- Active: 1762183366540@@127.0.0.1@1433@QuanLyChungCuDB
 
 
-create DATABASE QuanLyNhanKhauDB;
+create DATABASE QuanLyChungCuDB;
 
 CREATE TABLE HoGiaDinh (
     ID_HoGiaDinh INT IDENTITY(1,1) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE TamVang (
     NgayDangKy DATETIME DEFAULT GETDATE()
 );
 
-GO 
+
 
 ALTER TABLE HoGiaDinh
 ADD CONSTRAINT PK_HoGiaDinh PRIMARY KEY (ID_HoGiaDinh);
@@ -87,4 +87,3 @@ ALTER TABLE TamVang
 ADD CONSTRAINT FK_TamVang_NhanKhau
 FOREIGN KEY (ID_NhanKhau) REFERENCES NhanKhau(ID_NhanKhau);
 
-GO
