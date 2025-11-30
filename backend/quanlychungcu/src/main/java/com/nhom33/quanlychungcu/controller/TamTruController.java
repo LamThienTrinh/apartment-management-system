@@ -2,6 +2,7 @@ package com.nhom33.quanlychungcu.controller;
 
 import com.nhom33.quanlychungcu.entity.TamTru;
 import com.nhom33.quanlychungcu.service.TamTruService;
+import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,17 +24,17 @@ public class TamTruController {
     }
 
     @PutMapping("/{id}")
-    public TamTru update(@PathVariable Integer id, @RequestBody TamTru t) {
+    public TamTru update(@PathVariable @NonNull Integer id, @RequestBody TamTru t) {
         return service.update(id, t);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable @NonNull Integer id) {
         service.delete(id);
     }
 
     @GetMapping("/{id}")
-    public TamTru getById(@PathVariable Integer id) {
+    public TamTru getById(@PathVariable @NonNull Integer id) {
         return service.getById(id);
     }
 
