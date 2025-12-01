@@ -1,13 +1,23 @@
 package com.nhom33.quanlychungcu.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
+ 
+/**
+ * Entity quản lý thông tin Giấy Tạm Trú.
+ * 
+ * LOGIC NGHIỆP VỤ:
+ * - TamTru liên kết với NhanKhau (người tạm trú phải xuất hiện trong danh sách nhân khẩu).
+ * - Khi đăng ký tạm trú, bắt buộc Insert NhanKhau trước với TrangThai = "Tạm trú".
+ * - Entity này lưu thông tin giấy tờ tạm trú (ngày bắt đầu, ngày kết thúc, lý do...).
+ */
 @Entity
 @Table(name = "TamTru")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TamTru {
 
     @Id
@@ -15,42 +25,48 @@ public class TamTru {
     @Column(name = "ID_TamTru")
     private Integer id;
 
-    @NotNull(message = "Hộ gia đình không được để trống")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_HoGiaDinh", nullable = false)
-    private HoGiaDinh hoGiaDinh;
+    /**
+     * Liên kết với NhanKhau - người tạm trú.
+     * Bắt buộc: Người tạm trú phải được insert vào bảng NhanKhau trước.
+     */
+    @NotNull(message = "Nhân khẩu tạm trú không được để trống")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_NhanKhau", nullable = false)
+    @JsonIgnoreProperties({"danhSachTamVang", "hoGiaDinh"})
+    private NhanKhau nhanKhau;
 
-    @NotBlank(message = "Họ tên không được để trống")
-    @Size(max = 100, message = "Họ tên không được vượt quá 100 ký tự")
-    @Column(name = "HoTen", nullable = false)
-    private String hoTen;
+    /**
+     * Mã giấy tạm trú (nếu có - do cơ quan cấp).
+     */
+    @Size(max = 50, message = "Mã giấy tạm trú không được vượt quá 50 ký tự")
+    @Column(name = "MaGiayTamTru", length = 50)
+    private String maGiayTamTru;
 
-    @Pattern(regexp = "^[0-9]{12}$", message = "Số CCCD phải có 12 chữ số")
-    @Column(name = "SoCCCD")
-    private String soCCCD;
+    /**
+     * Địa chỉ thường trú (nơi đăng ký hộ khẩu gốc của người tạm trú).
+     */
+    @Size(max = 200, message = "Địa chỉ thường trú không được vượt quá 200 ký tự")
+    @Column(name = "DiaChiThuongTru", length = 200)
+    private String diaChiThuongTru;
 
-    @Column(name = "NgaySinh")
-    private LocalDate ngaySinh;
-
-    @Pattern(regexp = "^[0-9]{10,11}$", message = "Số điện thoại phải có 10-11 chữ số")
-    @Column(name = "SoDienThoai")
-    private String soDienThoai;
-
-    @NotNull(message = "Ngày bắt đầu không được để trống")
-    @Column(name = "NgayBatDau")
+    @NotNull(message = "Ngày bắt đầu tạm trú không được để trống")
+    @Column(name = "NgayBatDau", nullable = false)
     private LocalDate ngayBatDau;
 
-    @NotNull(message = "Ngày kết thúc không được để trống")
+    /**
+     * Ngày hết hạn tạm trú (có thể null nếu chưa xác định).
+     */
     @Column(name = "NgayKetThuc")
     private LocalDate ngayKetThuc;
 
-    @Column(name = "LyDo")
+    @Size(max = 500, message = "Lý do tạm trú không được vượt quá 500 ký tự")
+    @Column(name = "LyDo", length = 500)
     private String lyDo;
 
     @Column(name = "NgayDangKy")
     private LocalDateTime ngayDangKy;
 
-    //  Lifecycle Callbacks 
+    // ===== Lifecycle Callbacks =====
     
     @PrePersist
     protected void onCreate() {
@@ -59,19 +75,18 @@ public class TamTru {
         }
     }
 
-    //  Constructors 
+    // ===== Constructors =====
     
     public TamTru() {
     }
     
-    public TamTru(HoGiaDinh hoGiaDinh, String hoTen, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
-        this.hoGiaDinh = hoGiaDinh;
-        this.hoTen = hoTen;
+    public TamTru(NhanKhau nhanKhau, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        this.nhanKhau = nhanKhau;
         this.ngayBatDau = ngayBatDau;
         this.ngayKetThuc = ngayKetThuc;
     }
 
-    //  Getter & Setter 
+    // ===== Getters & Setters =====
 
     public Integer getId() {
         return id;
@@ -81,44 +96,28 @@ public class TamTru {
         this.id = id;
     }
 
-    public HoGiaDinh getHoGiaDinh() {
-        return hoGiaDinh;
+    public NhanKhau getNhanKhau() {
+        return nhanKhau;
     }
 
-    public void setHoGiaDinh(HoGiaDinh hoGiaDinh) {
-        this.hoGiaDinh = hoGiaDinh;
+    public void setNhanKhau(NhanKhau nhanKhau) {
+        this.nhanKhau = nhanKhau;
     }
 
-    public String getHoTen() {
-        return hoTen;
+    public String getMaGiayTamTru() {
+        return maGiayTamTru;
     }
 
-    public void setHoTen(String hoTen) {
-        this.hoTen = hoTen;
+    public void setMaGiayTamTru(String maGiayTamTru) {
+        this.maGiayTamTru = maGiayTamTru;
     }
 
-    public String getSoCCCD() {
-        return soCCCD;
+    public String getDiaChiThuongTru() {
+        return diaChiThuongTru;
     }
 
-    public void setSoCCCD(String soCCCD) {
-        this.soCCCD = soCCCD;
-    }
-
-    public LocalDate getNgaySinh() {
-        return ngaySinh;
-    }
-
-    public void setNgaySinh(LocalDate ngaySinh) {
-        this.ngaySinh = ngaySinh;
-    }
-
-    public String getSoDienThoai() {
-        return soDienThoai;
-    }
-
-    public void setSoDienThoai(String soDienThoai) {
-        this.soDienThoai = soDienThoai;
+    public void setDiaChiThuongTru(String diaChiThuongTru) {
+        this.diaChiThuongTru = diaChiThuongTru;
     }
 
     public LocalDate getNgayBatDau() {
@@ -153,28 +152,26 @@ public class TamTru {
         this.ngayDangKy = ngayDangKy;
     }
 
-    //  Utility Methods 
+    // ===== Utility Methods =====
     
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TamTru tamTru = (TamTru) o;
-        return Objects.equals(id, tamTru.id) && 
-               Objects.equals(soCCCD, tamTru.soCCCD);
+        return Objects.equals(id, tamTru.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, soCCCD);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "TamTru{" +
                 "id=" + id +
-                ", hoTen='" + hoTen + '\'' +
-                ", soCCCD='" + soCCCD + '\'' +
+                ", nhanKhauId=" + (nhanKhau != null ? nhanKhau.getId() : null) +
                 ", ngayBatDau=" + ngayBatDau +
                 ", ngayKetThuc=" + ngayKetThuc +
                 ", ngayDangKy=" + ngayDangKy +

@@ -5,9 +5,10 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
+ 
 @Entity
 @Table(name = "TamVang")
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TamVang {
 
     @Id
@@ -16,7 +17,7 @@ public class TamVang {
     private Integer id;
 
     @NotNull(message = "Nhân khẩu không được để trống")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_NhanKhau", nullable = false)
     private NhanKhau nhanKhau;
 
