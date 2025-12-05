@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+ 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -51,12 +51,12 @@ public class HoaDonController {
     public ResponseEntity<LichSuThanhToan> addPayment(
             @PathVariable @NonNull Integer id,
             @RequestBody Map<String, Object> request) {
-
+        
         BigDecimal soTien = new BigDecimal(request.get("soTien").toString());
         String hinhThuc = (String) request.get("hinhThuc");
         String nguoiNop = (String) request.get("nguoiNop");
         String ghiChu = (String) request.get("ghiChu");
-
+        
         LichSuThanhToan thanhToan = service.addPayment(id, soTien, hinhThuc, nguoiNop, ghiChu);
         return ResponseEntity.status(HttpStatus.CREATED).body(thanhToan);
     }
@@ -73,7 +73,7 @@ public class HoaDonController {
     public ResponseEntity<Page<HoaDon>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        
         Pageable pageable = PageRequest.of(page, size);
         Page<HoaDon> result = service.findAll(pageable);
         return ResponseEntity.ok(result);
@@ -85,7 +85,7 @@ public class HoaDonController {
             @PathVariable @NonNull Integer idHoGiaDinh,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        
         Pageable pageable = PageRequest.of(page, size);
         Page<HoaDon> result = service.findByHoGiaDinh(idHoGiaDinh, pageable);
         return ResponseEntity.ok(result);
@@ -100,13 +100,13 @@ public class HoaDonController {
     public ResponseEntity<?> findByHoGiaDinhAndDotThu(
             @PathVariable @NonNull Integer idHoGiaDinh,
             @PathVariable @NonNull Integer idDotThu) {
-
+        
         return service.findByHoGiaDinhAndDotThu(idHoGiaDinh, idDotThu)
-                .map(hoaDon -> ResponseEntity.ok((Object) hoaDon))
-                .orElse(ResponseEntity.ok(Map.of(
-                        "found", false,
-                        "message", "Chưa có hóa đơn cho đợt thu này"
-                )));
+            .map(hoaDon -> ResponseEntity.ok((Object) hoaDon))
+            .orElse(ResponseEntity.ok(Map.of(
+                "found", false,
+                "message", "Chưa có hóa đơn cho đợt thu này"
+            )));
     }
 
     @GetMapping("/{id}/lich-su-thanh-toan")
@@ -124,9 +124,10 @@ public class HoaDonController {
             @RequestParam(required = false) String trangThai,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        
         Pageable pageable = PageRequest.of(page, size);
         Page<HoaDon> result = service.search(idHoGiaDinh, idDotThu, trangThai, pageable);
         return ResponseEntity.ok(result);
     }
 }
+
