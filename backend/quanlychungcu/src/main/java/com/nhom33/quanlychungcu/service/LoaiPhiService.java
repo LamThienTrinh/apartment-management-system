@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
- 
+
 /**
  * Service: Quản lý Loại Phí.
  * 
@@ -285,6 +285,20 @@ public class LoaiPhiService {
     public Page<LoaiPhi> findByDangHoatDong(Boolean dangHoatDong, @NonNull Pageable pageable) {
         return repo.findByDangHoatDong(dangHoatDong, pageable);
     }
+    /**
+     * Lấy tất cả loại phí (không phân trang).
+     */
+    public List<LoaiPhi> findAll() {
+        // ADMIN xem tất cả
+        if (securityHelper.canViewAll()) {
+            return repo.findAll();
+        }
+        
+        // Manager xem phí của mình
+        Integer managerId = securityHelper.getCurrentUserId();
+        return repo.findByNguoiQuanLyId(managerId, Pageable.unpaged()).getContent();
+    }
+
 
     /**
      * Tìm kiếm loại phí của Manager hiện tại.
@@ -314,20 +328,7 @@ public class LoaiPhiService {
         return repo.findPhiChungActiveByNguoiQuanLy(managerId);
     }
 
-    /**
-     * Lấy tất cả loại phí (không phân trang).
-     */
-    public List<LoaiPhi> findAll() {
-        // ADMIN xem tất cả
-        if (securityHelper.canViewAll()) {
-            return repo.findAll();
-        }
-        
-        // Manager xem phí của mình
-        Integer managerId = securityHelper.getCurrentUserId();
-        return repo.findByNguoiQuanLyId(managerId, Pageable.unpaged()).getContent();
-    }
-
+    
     /**
      * Kiểm tra loại phí có tồn tại không.
      */
@@ -335,3 +336,4 @@ public class LoaiPhiService {
         return repo.existsById(id);
     }
 }
+

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
- 
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -164,6 +164,15 @@ public class LoaiPhiController {
         Page<LoaiPhi> result = service.findPhiChung(pageable);
         return ResponseEntity.ok(result);
     }
+    /**
+     * Lấy tất cả loại phí đang hoạt động áp dụng cho một tòa nhà.
+     */
+    @GetMapping("/by-toa-nha/{toaNhaId}/active")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ACCOUNTANT')")
+    public ResponseEntity<List<LoaiPhi>> findActiveByToaNha(@PathVariable Integer toaNhaId) {
+        List<LoaiPhi> result = service.findActiveByToaNha(toaNhaId);
+        return ResponseEntity.ok(result);
+    }
 
     /**
      * Lấy tất cả loại phí áp dụng cho một tòa nhà.
@@ -180,15 +189,7 @@ public class LoaiPhiController {
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * Lấy tất cả loại phí đang hoạt động áp dụng cho một tòa nhà.
-     */
-    @GetMapping("/by-toa-nha/{toaNhaId}/active")
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ACCOUNTANT')")
-    public ResponseEntity<List<LoaiPhi>> findActiveByToaNha(@PathVariable Integer toaNhaId) {
-        List<LoaiPhi> result = service.findActiveByToaNha(toaNhaId);
-        return ResponseEntity.ok(result);
-    }
+    
 
     @GetMapping("/all")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','ACCOUNTANT')")
@@ -211,3 +212,4 @@ public class LoaiPhiController {
         return ResponseEntity.ok(result);
     }
 }
+
