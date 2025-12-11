@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Result, Button, Card, Descriptions, Spin, Tag } from "antd";
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
+import { 
+  CheckCircleOutlined, 
+  CloseCircleOutlined, 
   ExclamationCircleOutlined,
   HomeOutlined,
   ReloadOutlined,
@@ -14,7 +14,7 @@ import { paymentService } from "../../services";
 
 /**
  * Trang hiển thị kết quả thanh toán VNPAY.
- *
+ * 
  * Query params:
  * - status: 'success' | 'failed' | 'error'
  * - hoaDonId: ID hóa đơn (nếu có)
@@ -54,17 +54,17 @@ export default function PaymentResultPage() {
             title="Thanh toán thành công!"
             subTitle={decodeURIComponent(message)}
             extra={[
-              <Button
-                type="primary"
-                key="home"
+              <Button 
+                type="primary" 
+                key="home" 
                 icon={<HomeOutlined />}
                 onClick={() => navigate("/resident")}
               >
                 Về trang chủ
               </Button>,
               hoaDonId && (
-                <Button
-                  key="detail"
+                <Button 
+                  key="detail" 
                   icon={<FileTextOutlined />}
                   onClick={() => navigate(`/resident/invoices`)}
                 >
@@ -109,16 +109,16 @@ export default function PaymentResultPage() {
             title="Giao dịch thất bại"
             subTitle={getFailureMessage(responseCode, message)}
             extra={[
-              <Button
-                type="primary"
-                key="retry"
+              <Button 
+                type="primary" 
+                key="retry" 
                 icon={<ReloadOutlined />}
                 onClick={() => navigate("/resident/online-payment")}
               >
                 Thử lại
               </Button>,
-              <Button
-                key="home"
+              <Button 
+                key="home" 
                 icon={<HomeOutlined />}
                 onClick={() => navigate("/resident")}
               >
@@ -146,9 +146,9 @@ export default function PaymentResultPage() {
             title="Có lỗi xảy ra"
             subTitle={decodeURIComponent(message) || "Không thể xử lý kết quả thanh toán. Vui lòng kiểm tra lại hóa đơn."}
             extra={[
-              <Button
-                type="primary"
-                key="home"
+              <Button 
+                type="primary" 
+                key="home" 
                 icon={<HomeOutlined />}
                 onClick={() => navigate("/resident")}
               >
@@ -165,9 +165,9 @@ export default function PaymentResultPage() {
             title="Không có thông tin thanh toán"
             subTitle="Không tìm thấy thông tin về giao dịch thanh toán."
             extra={[
-              <Button
-                type="primary"
-                key="home"
+              <Button 
+                type="primary" 
+                key="home" 
                 icon={<HomeOutlined />}
                 onClick={() => navigate("/resident")}
               >

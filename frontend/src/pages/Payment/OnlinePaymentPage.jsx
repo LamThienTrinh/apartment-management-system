@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import {
-  Button, App, Select, Card, Tag, Descriptions, Spin, Empty, Alert, Space, Divider
+import { 
+  Button, App, Select, Card, Tag, Descriptions, Spin, Empty, Alert, Space, Divider 
 } from "antd";
-import {
-  CreditCardOutlined,
-  CheckCircleOutlined,
+import { 
+  CreditCardOutlined, 
+  CheckCircleOutlined, 
   InfoCircleOutlined,
   CalendarOutlined,
   HomeOutlined,
@@ -18,7 +18,7 @@ const { Option } = Select;
 
 /**
  * Trang Thanh Toán Online - UX cải tiến.
- *
+ * 
  * Luồng:
  * 1. Chọn Tòa nhà
  * 2. Chọn Hộ gia đình (lọc theo tòa nhà)
@@ -30,7 +30,7 @@ export default function OnlinePaymentPage() {
   const { message } = App.useApp();
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
-
+  
   // State
   const [buildings, setBuildings] = useState([]);
   const [households, setHouseholds] = useState([]);
@@ -48,10 +48,10 @@ export default function OnlinePaymentPage() {
   // - MANAGER: chỉ thấy tòa nhà mình sở hữu
   // - ACCOUNTANT/RESIDENT: chỉ thấy tòa nhà được gắn vào (qua UserToaNha)
   useEffect(() => {
-    const fetchBuildings = isAdmin
-      ? buildingService.getAllForDropdown()
+    const fetchBuildings = isAdmin 
+      ? buildingService.getAllForDropdown() 
       : buildingService.getMyBuildings();
-
+    
     fetchBuildings
       .then(data => setBuildings(Array.isArray(data) ? data : []))
       .catch(err => {
@@ -72,7 +72,7 @@ export default function OnlinePaymentPage() {
   // Lọc hộ gia đình theo tòa nhà đã chọn
   const filteredHouseholds = useMemo(() => {
     if (!selectedToaNha) return [];
-    return households.filter(h =>
+    return households.filter(h => 
       (h.toaNha?.id === selectedToaNha) || (h.idToaNha === selectedToaNha)
     );
   }, [households, selectedToaNha]);
@@ -102,7 +102,7 @@ export default function OnlinePaymentPage() {
     if (selectedHoGiaDinh && selectedDotThu) {
       setLoadingHoaDon(true);
       setHoaDon(null);
-
+      
       paymentService.getHoaDonByDotThu(selectedHoGiaDinh, selectedDotThu)
         .then(data => setHoaDon(data))
         .catch(err => {
@@ -140,7 +140,7 @@ export default function OnlinePaymentPage() {
   }, [hoaDon, message]);
 
   // Tính số tiền còn nợ
-  const conNo = hoaDon
+  const conNo = hoaDon 
     ? (hoaDon.tongTienPhaiThu || 0) - (hoaDon.soTienDaDong || 0)
     : 0;
 
@@ -150,7 +150,7 @@ export default function OnlinePaymentPage() {
   const selectedBuilding = buildings.find(b => b.id === selectedToaNha);
 
   return (
-    <ContentCard
+    <ContentCard 
       title={
         <Space>
           <CreditCardOutlined />
@@ -239,10 +239,10 @@ export default function OnlinePaymentPage() {
             >
               {dotThus.map((dt) => (
                 <Option key={dt.id} value={dt.id}>
-                  {dt.tenDotThu}
+                  {dt.tenDotThu} 
                   {dt.trangThai && (
-                    <Tag
-                      color={dt.trangThai === "Đang diễn ra" ? "green" : "default"}
+                    <Tag 
+                      color={dt.trangThai === "Đang diễn ra" ? "green" : "default"} 
                       style={{ marginLeft: 8 }}
                     >
                       {dt.trangThai}
@@ -265,14 +265,14 @@ export default function OnlinePaymentPage() {
           ) : hoaDon ? (
             <>
               {/* Có hóa đơn */}
-              <Descriptions
+              <Descriptions 
                 title={
                   <Space>
                     <InfoCircleOutlined />
                     Thông tin hóa đơn
                   </Space>
                 }
-                bordered
+                bordered 
                 column={{ xs: 1, sm: 2 }}
               >
                 <Descriptions.Item label="Mã hóa đơn">
@@ -304,7 +304,7 @@ export default function OnlinePaymentPage() {
                 </Descriptions.Item>
                 <Descriptions.Item label="Trạng thái" span={2}>
                   <Tag color={
-                    hoaDon.trangThai === "Đã thanh toán" ? "green" :
+                    hoaDon.trangThai === "Đã thanh toán" ? "green" : 
                     hoaDon.trangThai === "Đang đóng" ? "orange" : "red"
                   }>
                     {hoaDon.trangThai}
@@ -381,3 +381,4 @@ export default function OnlinePaymentPage() {
     </ContentCard>
   );
 }
+
