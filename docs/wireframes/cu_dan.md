@@ -1,6 +1,197 @@
-# Wireframe – Trang cư dân
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
 
-- Thông tin cá nhân
-- Lịch sử đóng phí
-- Gửi phản ánh
-- Xem phản hồi từ BQT
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
+
+# CSDL – Tài khoản & phân quyền
+
+Bảng TaiKhoan:
+- id
+- username
+- password_hash
+- role
+
+Bảng PhanQuyen:
+- role
+- ten_quyen
+
+Bảng NhatKyHeThong:
+- user_id
+- hanh_dong
+- thoi_gian
