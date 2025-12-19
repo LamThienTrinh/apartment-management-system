@@ -133,4 +133,28 @@ Endpoint: GET /api/invoices
 Expected: Status 401
 Result: PASS
 
-==================
+========================================
+
+9. PERFORMANCE TESTING
+
+Average response time: 200ms
+Maximum response time: 450ms
+No system crash occurred.
+
+========================================
+
+10. SUMMARY
+
+All APIs in Sprint 3 were tested successfully.
+No critical bugs were found.
+
+========================================
+
+11. CONCLUSION
+
+Sprint 3 testing is completed.
+The system is stable.
+
+========================================
+
+12. END OF DOCUMENT
