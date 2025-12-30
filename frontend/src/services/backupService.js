@@ -18,15 +18,16 @@ const backupService = {
     window.URL.revokeObjectURL(url);
   },
 
-  listBackups: async () => {
-    const response = await axiosClient.get("/backup/list");
-    return response.data;
-  },
+  
 
   restoreBackup: async (fileName) => {
     const response = await axiosClient.post("/backup/restore", null, {
       params: { fileName },
     });
+    return response.data;
+  },
+  listBackups: async () => {
+    const response = await axiosClient.get("/backup/list");
     return response.data;
   },
 

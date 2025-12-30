@@ -14,18 +14,7 @@ export default function BackupPage() {
     refetch();
   }, [refetch]);
 
-  const handleCreateBackup = async () => {
-    setLoading(true);
-    try {
-      await backupService.createBackup();
-      message.success("Tạo backup thành công");
-      refetch();
-    } catch (error) {
-      message.error("Lỗi tạo backup");
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const handleCreateBackupZip = async () => {
     setLoading(true);
@@ -35,6 +24,18 @@ export default function BackupPage() {
       refetch();
     } catch (error) {
       message.error("Lỗi tạo backup ZIP");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleCreateBackup = async () => {
+    setLoading(true);
+    try {
+      await backupService.createBackup();
+      message.success("Tạo backup thành công");
+      refetch();
+    } catch (error) {
+      message.error("Lỗi tạo backup");
     } finally {
       setLoading(false);
     }
