@@ -1,16 +1,19 @@
 package com.nhom33.quanlychungcu.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+ 
 @Entity
 @Table(name = "NhanKhau")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class NhanKhau {
-
+ 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_NhanKhau")
@@ -58,11 +61,13 @@ public class NhanKhau {
 
     // ===== Relationships =====
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_HoGiaDinh", nullable = false)
+    @JsonIgnoreProperties({"danhSachNhanKhau", "danhSachHoaDon", "danhSachDinhMuc", "danhSachPhanAnh"})
     private HoGiaDinh hoGiaDinh;
 
-    @OneToMany(mappedBy = "nhanKhau", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "nhanKhau", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<TamVang> danhSachTamVang = new ArrayList<>();
 
     // ===== Constructors =====

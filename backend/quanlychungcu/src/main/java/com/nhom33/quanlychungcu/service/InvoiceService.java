@@ -26,7 +26,7 @@ public class InvoiceService {
      */
     public String generateInvoiceHtml(Integer idHoaDon) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
+            .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
 
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html><head><meta charset='UTF-8'>");
@@ -101,3 +101,4 @@ public class InvoiceService {
         return String.format("%,d đ", amount.longValue());
     }
 }
+

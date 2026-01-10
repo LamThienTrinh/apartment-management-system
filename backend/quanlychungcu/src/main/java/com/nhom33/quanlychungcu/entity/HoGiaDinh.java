@@ -1,16 +1,19 @@
 package com.nhom33.quanlychungcu.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+ 
 @Entity
 @Table(name = "HoGiaDinh")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class HoGiaDinh {
-
+ 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_HoGiaDinh")
@@ -55,12 +58,28 @@ public class HoGiaDinh {
     private LocalDateTime ngayCapNhat;
 
     // ===== Relationships =====
+    // orphanRemoval = true: Khi xóa HoGiaDinh, tất cả entity con sẽ bị xóa theo
 
-    @OneToMany(mappedBy = "hoGiaDinh", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hoGiaDinh", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hoGiaDinh"})
     private List<NhanKhau> danhSachNhanKhau = new ArrayList<>();
 
-    @OneToMany(mappedBy = "hoGiaDinh", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TamTru> danhSachTamTru = new ArrayList<>();
+    // TamTru đã được chuyển sang liên kết với NhanKhau thay vì HoGiaDinh
+
+    @OneToMany(mappedBy = "hoGiaDinh", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<HoaDon> danhSachHoaDon = new ArrayList<>();
+
+    @OneToMany(mappedBy = "hoGiaDinh", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<DinhMucThu> danhSachDinhMuc = new ArrayList<>();
+
+    // PhanAnh đã được chuyển sang liên kết với User và ToaNha (không còn liên kết với HoGiaDinh)
+
+    @NotNull(message = "Tòa nhà không được để trống")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_ToaNha", nullable = false)
+    private ToaNha toaNha;
 
     // ===== Lifecycle Callbacks =====
 
@@ -184,12 +203,14 @@ public class HoGiaDinh {
         this.danhSachNhanKhau = danhSachNhanKhau;
     }
 
-    public List<TamTru> getDanhSachTamTru() {
-        return danhSachTamTru;
+    // TamTru đã được chuyển sang liên kết với NhanKhau - không còn danhSachTamTru ở đây
+
+    public ToaNha getToaNha() {
+        return toaNha;
     }
 
-    public void setDanhSachTamTru(List<TamTru> danhSachTamTru) {
-        this.danhSachTamTru = danhSachTamTru;
+    public void setToaNha(ToaNha toaNha) {
+        this.toaNha = toaNha;
     }
 
     // ===== Utility Methods =====

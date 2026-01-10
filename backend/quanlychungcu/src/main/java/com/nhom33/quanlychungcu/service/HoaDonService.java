@@ -24,12 +24,12 @@ public class HoaDonService {
     private final BangGiaService bangGiaService;
 
     public HoaDonService(HoaDonRepository hoaDonRepo,
-                         HoGiaDinhRepository hoGiaDinhRepo,
-                         DotThuRepository dotThuRepo,
-                         DinhMucThuRepository dinhMucRepo,
-                         ChiTietHoaDonRepository chiTietRepo,
-                         LichSuThanhToanRepository thanhToanRepo,
-                         BangGiaService bangGiaService) {
+                        HoGiaDinhRepository hoGiaDinhRepo,
+                        DotThuRepository dotThuRepo,
+                        DinhMucThuRepository dinhMucRepo,
+                        ChiTietHoaDonRepository chiTietRepo,
+                        LichSuThanhToanRepository thanhToanRepo,
+                        BangGiaService bangGiaService) {
         this.hoaDonRepo = hoaDonRepo;
         this.hoGiaDinhRepo = hoGiaDinhRepo;
         this.dotThuRepo = dotThuRepo;
@@ -42,47 +42,47 @@ public class HoaDonService {
     @Transactional
     public HoaDon createHoaDonForHoGiaDinh(Integer idHoGiaDinh, Integer idDotThu) {
         HoGiaDinh hoGiaDinh = hoGiaDinhRepo.findById(idHoGiaDinh)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hộ gia đình với ID: " + idHoGiaDinh));
-
+            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hộ gia đình với ID: " + idHoGiaDinh));
+        
         DotThu dotThu = dotThuRepo.findById(idDotThu)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đợt thu với ID: " + idDotThu));
+            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đợt thu với ID: " + idDotThu));
 
         // Kiểm tra đã có hóa đơn chưa
         hoaDonRepo.findByHoGiaDinhIdAndDotThuId(idHoGiaDinh, idDotThu)
-                .ifPresent(hd -> {
-                    throw new IllegalArgumentException("Hộ gia đình đã có hóa đơn cho đợt thu này");
-                });
+            .ifPresent(hd -> {
+                throw new IllegalArgumentException("Hộ gia đình đã có hóa đơn cho đợt thu này");
+            });
 
         // Lấy định mức thu của hộ
         List<DinhMucThu> dinhMucList = dinhMucRepo.findActiveByHoGiaDinhId(idHoGiaDinh);
-
+        
         HoaDon hoaDon = new HoaDon();
         hoaDon.setHoGiaDinh(hoGiaDinh);
         hoaDon.setDotThu(dotThu);
         hoaDon.setTongTienPhaiThu(BigDecimal.ZERO);
         hoaDon.setSoTienDaDong(BigDecimal.ZERO);
         hoaDon.setTrangThai("Chưa đóng");
-
+        
         hoaDon = hoaDonRepo.save(hoaDon);
 
         // Tạo chi tiết hóa đơn từ định mức
         // Lấy ID tòa nhà để áp dụng giá ưu tiên
         Integer toaNhaId = hoGiaDinh.getToaNha() != null ? hoGiaDinh.getToaNha().getId() : null;
-
+        
         BigDecimal tongTien = BigDecimal.ZERO;
         for (DinhMucThu dm : dinhMucList) {
             LoaiPhi loaiPhi = dm.getLoaiPhi();
             if (loaiPhi.getDangHoatDong()) {
                 // Lấy giá ưu tiên: BangGiaDichVu (theo tòa) > LoaiPhi.donGia (mặc định)
                 BigDecimal donGia = bangGiaService.getDonGiaApDung(loaiPhi.getId(), toaNhaId);
-
+                
                 ChiTietHoaDon chiTiet = new ChiTietHoaDon();
                 chiTiet.setHoaDon(hoaDon);
                 chiTiet.setLoaiPhi(loaiPhi);
                 chiTiet.setSoLuong(dm.getSoLuong());
                 chiTiet.setDonGia(donGia);
                 chiTiet.setThanhTien(donGia.multiply(BigDecimal.valueOf(dm.getSoLuong())));
-
+                
                 chiTietRepo.save(chiTiet);
                 tongTien = tongTien.add(chiTiet.getThanhTien());
             }
@@ -95,8 +95,8 @@ public class HoaDonService {
     @Transactional
     public HoaDon updateTrangThai(Integer id, String trangThai) {
         HoaDon hoaDon = hoaDonRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hóa đơn với ID: " + id));
-
+            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hóa đơn với ID: " + id));
+        
         hoaDon.setTrangThai(trangThai);
         return hoaDonRepo.save(hoaDon);
     }
@@ -104,7 +104,7 @@ public class HoaDonService {
     @Transactional
     public LichSuThanhToan addPayment(Integer idHoaDon, BigDecimal soTien, String hinhThuc, String nguoiNop, String ghiChu) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hóa đơn với ID: " + idHoaDon));
+            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hóa đơn với ID: " + idHoaDon));
 
         LichSuThanhToan thanhToan = new LichSuThanhToan();
         thanhToan.setHoaDon(hoaDon);
@@ -112,15 +112,15 @@ public class HoaDonService {
         thanhToan.setHinhThuc(hinhThuc);
         thanhToan.setNguoiNop(nguoiNop);
         thanhToan.setGhiChu(ghiChu);
-
+        
         thanhToan = thanhToanRepo.save(thanhToan);
 
         // Cập nhật số tiền đã đóng
         BigDecimal tongDaDong = thanhToanRepo.sumSoTienByHoaDonId(idHoaDon);
         if (tongDaDong == null) tongDaDong = BigDecimal.ZERO;
-
+        
         hoaDon.setSoTienDaDong(tongDaDong);
-
+        
         // Cập nhật trạng thái
         if (tongDaDong.compareTo(hoaDon.getTongTienPhaiThu()) >= 0) {
             hoaDon.setTrangThai("Đã đóng");
@@ -129,14 +129,14 @@ public class HoaDonService {
         } else {
             hoaDon.setTrangThai("Chưa đóng");
         }
-
+        
         hoaDonRepo.save(hoaDon);
         return thanhToan;
     }
 
     public HoaDon getById(@NonNull Integer id) {
         return hoaDonRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hóa đơn với ID: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hóa đơn với ID: " + id));
     }
 
     public Page<HoaDon> findAll(@NonNull Pageable pageable) {
@@ -163,3 +163,4 @@ public class HoaDonService {
         return hoaDonRepo.findByHoGiaDinhIdAndDotThuIdWithDetails(idHoGiaDinh, idDotThu);
     }
 }
+
