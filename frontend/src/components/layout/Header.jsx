@@ -1,0 +1,47 @@
+import React from "react";
+import { Layout, Typography } from "antd";
+import { useAuthContext } from "../../contexts";
+
+const { Header: AntHeader } = Layout;
+const { Text } = Typography;
+
+// Map role code to display name
+const ROLE_DISPLAY_NAMES = {
+  ADMIN: "Quản trị viên",
+  MANAGER: "Quản lý tòa nhà",
+  ACCOUNTANT: "Kế toán",
+  RESIDENT: "Cư dân",
+};
+
+export default function Header() {
+  const { user } = useAuthContext();
+
+  const getRoleDisplayName = (role) => {
+    return ROLE_DISPLAY_NAMES[role] || role || "Không xác định";
+  };
+
+  return (
+    <AntHeader
+      style={{
+        background: "#0b1224",
+        padding: "0 24px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+      }}
+    >
+      <Text strong style={{ color: "#e2e8f0", fontSize: 16 }}>
+        Hệ thống quản lý chung cư
+      </Text>
+      {user && (
+        <div style={{ color: "#e2e8f0" }}>
+          <Text style={{ color: "#e2e8f0" }}>{user.username}</Text>
+          <Text style={{ marginLeft: 8, fontSize: 12, opacity: 0.7, color: "#94a3b8" }}>
+            ({getRoleDisplayName(user.role)})
+          </Text>
+        </div>
+      )}
+    </AntHeader>
+  );
+}
